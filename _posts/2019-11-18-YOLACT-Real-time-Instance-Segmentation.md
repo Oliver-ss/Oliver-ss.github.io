@@ -60,4 +60,4 @@ loss function上面就很平凡，用了分类的loss，回归框位置的loss�
 
 文章里还有个观点，说conv善于producing spatially coherent masks，而fc善于producing semantic vectors，所以用conv来生成prototype，用fc来生成coefficient，这也一定程度上解释了该方法生成的mask质量比较高的原因。
 
-但我疑惑的地方是YOLO是用fc来生成坐标的（YOLO也是本人采用的backbone detector），而SSD已经把fc改成了conv，所以是否意味着如果用SSD代替YOLO，产生的coefficient会效果变差？
+但我疑惑的地方是YOLO是用fc来生成坐标的（YOLO也是本文采用的backbone detector），而SSD已经把fc改成了conv，所以是否意味着如果用SSD代替YOLO，产生的coefficient会效果变差？
