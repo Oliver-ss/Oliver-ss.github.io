@@ -12,7 +12,7 @@ tags:
 ---
 
 # Introduction
-首先这个文章关注的是real-time的实例分割任务，所以主要是针对Mask-RCNN two stage并且还要在进行ROI Pool/Align在进行分割导致速度过慢的问题，本文提出了一种并行的one-stage的方法。在COCO数据集上使用一张卡达到了33fps
+首先这个文章关注的是real-time的实例分割任务，所以主要是针对Mask-RCNN two stage并且还要在进行ROI Pool/Align在进行分割导致速度过慢的问题，本文提出了一种并行的one-stage的方法。在COCO数据集上（550\*550）使用一张卡达到了33fps并且保持了29.8的mAP
 
 # Method
 文章的方法很简单，将实例分割任务分为两支，一支是预测prototypes，第二支是预测cofficients，然后通过矩阵乘进行一个线性变换得到最后的segmentation结果。（这里看不懂不要紧，往下看哈）
