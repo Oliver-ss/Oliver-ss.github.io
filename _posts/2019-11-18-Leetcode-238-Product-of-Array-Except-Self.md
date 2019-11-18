@@ -16,8 +16,7 @@ Given an array nums of n integers where n > 1, return an array output such that 
 
 **Example:**
 
-Input: [1, 2, 3, 4]
-
+Input: [1, 2, 3, 4]<br>
 Output: [24,12,8,6]
 
 **Note:**
@@ -28,7 +27,9 @@ Could you solve it with constant space complexity? (The output array does not co
 
 # My Solution
 
-## O(N) Space Complexity
+## Solution1: 
+**O(N) Time COmplexity, O(N) Space Complexity**
+每一个数的对应的乘积其实可以表示为该数左边的所有数的乘积乘以该数右边的所有数的乘积，因此最简单的方法就是先用两个列表从左到右和从右到左的连续乘积存出来，类似于numpy cumprod用法。
 ```python
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
@@ -41,7 +42,9 @@ class Solution:
             ans.append(left[i]*right[len(nums)-i-1])
         return ans
 ```
-## O(1) Space Complexity
+## Solution2:
+**O(N) Time COmplexity, O(1) Space Complexity**
+一个取巧的方法，先存一个从左到右的连续乘积，然后再从右到左的乘回去。
 ```python
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
