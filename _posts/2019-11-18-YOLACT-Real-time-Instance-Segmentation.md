@@ -57,3 +57,7 @@ loss function上面就很平凡，用了分类的loss，回归框位置的loss�
 
 # Thought
 个人觉得这个文章还是很有意思的，可能是我之前没看过prototype类型的文章，给我一种像是对图片进行各种各样的分割结果然后重新组合在一起得到一个想要的instance segmentation map
+
+文章里还有个观点，说conv善于producing spatially coherent masks，而fc善于producing semantic vectors，所以用conv来生成prototype，用fc来生成coefficient，这也一定程度上解释了该方法生成的mask质量比较高的原因。
+
+但我疑惑的地方是YOLO是用fc来生成坐标的（YOLO也是本人采用的backbone detector），而SSD已经把fc改成了conv，所以是否意味着如果用SSD代替YOLO，产生的coefficient会效果变差？
