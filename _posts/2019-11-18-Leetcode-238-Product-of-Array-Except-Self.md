@@ -4,7 +4,7 @@ title:      Leetcode 238
 subtitle:   Product of Array Except Self
 date:       2019-11-18
 author:     Song
-header-img: img/post_bkg_watermelon.jpg
+header-img: img/post_bkg_avacado1.jpg
 catalog: true
 tags:
     - Leetcode
