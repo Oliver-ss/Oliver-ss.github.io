@@ -32,6 +32,7 @@ prototype的生成很简单，就是在一个backbone network的输出后面又�
 拿一张input一张图片举例子，通过protonet得到h\*w\*k的prototype map，然后得到其中一个anchor的系数矩阵k\*1（该anchor属于的类别已经得到，这里只是用来生成segmentation map），所以直接拿prototype map和系数矩阵相乘即可得到h\*w\*1的最终结果,文章里还加了个sigmoid激活函数，来把最终结果归到0-1之间
 
 这里在解释一下为什么可以对生成的prototype加加减减得到instance segmentation map呢，看下面这个图，这是作者文章中的展示了一个图片生成的6个prototype图，就拿最后那个两个罐子图举例子，脑补一下确实加加减减可以得到结果(第一行第一列就是第一个罐子，第一行第三列减第一列得到第二个罐子)
+
 ![](/img/yolact/interpret.png)
 
 #### 4. Loss
