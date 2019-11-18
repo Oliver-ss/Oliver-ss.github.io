@@ -45,7 +45,15 @@ loss function上面就很平凡，用了分类的loss，回归框位置的loss�
 #### 6. Fast NMS
 传统的NMS算法大概只有5fps的速度，所以太慢了（具体的没看懂，留下了弱者的泪水TAT）
 
+# Result
+首先是和SOTA Mask-RCNN在coco上面的对比，可以看到虽然掉点了但是确实快很多，作者还指出一个现象就是IOU要求越高，他们的方法的表现就和Mask-RCNN越接近，甚至在IOU>0.95的情况的时候，还超过了SOTA，因此说明了mask质量很高
+![](/img/yolact/result1.png)
+
+本文还进行了ablation分析，可以看到fast nms基本上不掉点，同时也选出了比较好的prototype参数
+![](/img/yolact/result2.png)
+
 # Contribution
 作者自述本文最大的贡献就是又快又好(fast, high-quality, general)以及提出了fast nms然后更快了
 
 # Thought
+个人觉得这个文章还是很有意思的，可能是我之前没看过prototype类型的文章，给我一种像是对图片进行各种各样的分割结果然后重新组合在一起得到一个想要的instance segmentation map
