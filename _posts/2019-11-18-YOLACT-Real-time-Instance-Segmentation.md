@@ -12,14 +12,14 @@ tags:
 ---
 
 # Introduction
-首先这个文章关注的是real-time的实例分割任务，所以主要是针对Mask-RCNN two stage并且还要在进行ROI Pool/Align在进行分割导致速度过慢的问题，本文提出了一种并行的one-stage的方法。在COCO数据集上使用一张卡打到了33fps。
+首先这个文章关注的是real-time的实例分割任务，所以主要是针对Mask-RCNN two stage并且还要在进行ROI Pool/Align在进行分割导致速度过慢的问题，本文提出了一种并行的one-stage的方法。在COCO数据集上使用一张卡达到了33fps
 
 # Method
 文章的方法很简单，将实例分割任务分为两支，一支是预测prototypes，第二支是预测cofficients，然后通过矩阵乘进行一个线性变换得到最后的segmentation结果。（这里看不懂不要紧，往下看哈）
 
 #### 1. Prototype Generation
 prototype的生成很简单，就是在一个backbone network的输出后面又加了几个卷积层（如果要改变size的话还需要upsampleing），然后最后一层的channel数等于需要的prototype的数量  
-本文用的网络结构是FCN，因为这个网络最终的feature map不仅大而且深。
+本文用的网络结构是FCN，因为这个网络最终的feature map不仅大而且深
 
 ![](/img/yolact/prototype.png)
 
@@ -43,7 +43,7 @@ loss function上面就很平凡，用了分类的loss，回归框位置的loss�
 ![](/img/yolact/pipeline.png)
 
 #### 6. Fast NMS
-传统的NMS算法大概只有5fps的速度，所以太慢了（具体的没看懂，留下了弱者的泪水TT）
+传统的NMS算法大概只有5fps的速度，所以太慢了（具体的没看懂，留下了弱者的泪水TAT）
 
 # Contribution
 作者自述本文最大的贡献就是又快又好(fast, high-quality, general)以及提出了fast nms然后更快了
