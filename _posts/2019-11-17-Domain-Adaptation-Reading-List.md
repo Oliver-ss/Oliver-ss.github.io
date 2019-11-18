@@ -13,5 +13,4 @@ tags:
 
 # Introduction
 
->Domain adaptation is a particular case of transfer learning that utilizes labeled data in one or more relevant source domains to execute new tasks in a target domain.
-Cited from "Deep Visual Domain Adaptation: A Survey" [pdf](https://arxiv.org/abs/1802.03601)
+>Domain adaptation is a particular case of transfer learning that utilizes labeled data in one or more relevant source domains to execute new tasks in a target domain.<br>Cited from "Deep Visual Domain Adaptation: A Survey"  [pdf](https://arxiv.org/abs/1802.03601)
