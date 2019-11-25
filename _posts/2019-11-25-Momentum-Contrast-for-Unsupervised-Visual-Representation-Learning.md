@@ -52,6 +52,6 @@ tags:
 这里主要对比的之前end-to-end的方法以及menmory-bank的方法。和end-to-end的方法比无非是MoCo的字典变大了，而end-to-end会收minibatch大小的限制，如果minibatch变得很大，又会面临大bacth很难收敛的问题。和memory-bank比的话就是，memory-bank每次从bank中随机抽取一个batch拿出来算loss，然后算完在bank里面把这些替换成最新的query encoder生成的，就存在bank里面的key不是同一个阶段网络生成的问题，也就是前面提到的不够consistent的问题，所以效果不好。
 
 #### 3. Algorithm
-这是论文里面提供的pytorch伪代码，讲的应该是非常清楚了
+这是论文里面提供的pytorch伪代码，讲的应该是非常清楚了。提一下contrastive learning其实有很多不同的pretext task，这里主要关注的是instance discrimination task，意思就是同一张图片只和自己配对，和所属类别无关。
 
 ![](/img/moco/algorithm.png)
