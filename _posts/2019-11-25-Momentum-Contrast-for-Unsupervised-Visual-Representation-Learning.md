@@ -36,7 +36,7 @@ tags:
 #### 2. Momentum Contrast
 
 - Dictionary as a queue
-使用队列的结构表示字典，具体来说就是一个batch的数量是n，那每次query encoder产生n个query，key encoder产生n个new key，在算上述loss的时候，除了有这n个query和n个new key，字典中还存有k\*n个old key（源自于之前的batch存在字典里面的），这里的k是个超参，显然k越大字典越大，队列的思想就体现在当有一组new key产生的并且加字典的时候，就会有一组最旧的key被替换。（FILO）  
+使用队列的结构表示字典，具体来说就是一个batch的数量是n，那每次query encoder产生n个query，key encoder产生n个new key，在算上述loss的时候，除了有这n个query和n个new key，字典中还存有k\*n个old key（源自于之前的batch存在字典里面的），这里的k是个超参，显然k越大字典越大，队列的思想就体现在当有一组new key产生的并且加字典的时候，就会有一组最旧的key被替换。（FIFO）  
 这样构建字典的好处就是将字典的大小和minibatch的大小隔离了开来，变成了一个可以调整的超参。
 
 - Momentum Update
