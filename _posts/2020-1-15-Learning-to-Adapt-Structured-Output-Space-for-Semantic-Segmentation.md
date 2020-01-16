@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Learning to Adapt Structured Output Space for Semantic Segmentation
-subtitle:   /
+subtitle:   A adversarial domain adaptation method for sementic segmentation
 date:       2020-1-15
 author:     Song
 header-img: img/post_bkg_avocado5.jpg
