@@ -37,4 +37,4 @@ T就是Temperature，这个一个可控的变量，当T=1的时候，这就是�
 probability distribution over classes.）
 实际的方法就是训练一个大模型，然后在模型的最后一层使用带有T的softmax来获得soft label，并且用这个soft label来训练小模型，需要注意的是小模型在训练的时候也是用带有同样T的softmax，训练完成之后在inference的阶段，小模型的softmax的T依然设置为1。
 
-当训练小模型的数据集同时具有真实的GT label的时候，我们还可以把两种方法结合起来，即训练的时候既用soft label的loss来更新梯度，也用hard label的loss来更新梯度，但是这就会遇到两种loss的权重问题。作者发现，当hard label的loss权重较低时，效果比较好。原因是soft label的loss产生的梯度的幅值会变成原来的$$\frac{1}{T^2}}$$，所以我们需要在权重那里把$$T^2$$乘回去，这样子才能保证两种loss在梯度上的贡献差不多，同时也保证了不需要随着T的变化每次都重新调参。
+当训练小模型的数据集同时具有真实的GT label的时候，我们还可以把两种方法结合起来，即训练的时候既用soft label的loss来更新梯度，也用hard label的loss来更新梯度，但是这就会遇到两种loss的权重问题。作者发现，当hard label的loss权重较低时，效果比较好。原因是soft label的loss产生的梯度的幅值会变成原来的$$\frac{1}{T^2}$$，所以我们需要在权重那里把$$T^2$$乘回去，这样子才能保证两种loss在梯度上的贡献差不多，同时也保证了不需要随着T的变化每次都重新调参。
