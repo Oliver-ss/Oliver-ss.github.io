@@ -42,5 +42,5 @@ probability distribution over classes.）
 
 # Thought
 又看了一些相关的论文，可以理解的就是soft label利用的是不同种类之间的相似关系，并且基于此提出了了一种loss。
-一点想法，使用这种soft label来训练小模型，梯度更新上真的比普通的softmax来的更好么，留个坑，手算一波有时间把结果贴上，看看T对于反向传播的影响。
+一点想法，使用这种soft label来训练小模型，梯度更新上真的比普通的softmax来的更好么，留个坑，手算一波有时间把结果贴上，看看T对于反向传播的影响是不是是真的是$$\frac{1}{T^2}$$。
 
