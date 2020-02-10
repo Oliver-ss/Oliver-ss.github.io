@@ -1,14 +1,3 @@
-<head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [['$','$']]
-            }
-        });
-    </script>
-</head>
 ---
 layout:     post
 title:      Distilling the Knowledge in a Neural Network
@@ -21,6 +10,18 @@ tags:
     - Deep Learning
     - Distilling
 ---
+
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
 
 # Introduction
 核心的观点就是训练的时候我们希望模型越大能力越强越好，因为大模型可以很轻易的从数据集中获取到想要的信息，并且我们还会用一些方法来把多个训练的模型集成在一起进行预测，这样也能够
