@@ -41,5 +41,6 @@ probability distribution over classes.）
 当训练小模型的数据集同时具有真实的GT label的时候，我们还可以把两种方法结合起来，即训练的时候既用soft label的loss来更新梯度，也用hard label的loss来更新梯度，但是这就会遇到两种loss的权重问题。作者发现，当hard label的loss权重较低时，效果比较好。原因是soft label的loss产生的梯度的幅值会变成原来的$$\frac{1}{T^2}$$，所以我们需要在权重那里把$$T^2$$乘回去，这样子才能保证两种loss在梯度上的贡献差不多，同时也保证了不需要随着T的变化每次都重新调参。
 
 # Thought
+又看了一些相关的论文，可以理解的就是soft label利用的是不同种类之间的相似关系，并且基于此提出了了一种loss。
 一点想法，使用这种soft label来训练小模型，梯度更新上真的比普通的softmax来的更好么，留个坑，手算一波有时间把结果贴上，看看T对于反向传播的影响。
 
