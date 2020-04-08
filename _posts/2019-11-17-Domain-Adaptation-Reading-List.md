@@ -24,7 +24,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 
 当然这个文章能取得这么好的效果主要靠的是BN层的对于层间数据规范化的能力，因为BN会对层间数据做一个channel-wise的归一化，然后再通过可学习的缩放和平移系数，使得每个层得到的输入都尽可能的服从相同的分布（假设都是高斯分布），这从一定程度上减小了对于数据集的依赖，也就减少了domain shift对网络的影响。但这里只用到了均值，标准差这两个统计数据，即使两组数据同均值，同标准差，他们并不一定同分布，所以有一些方法也会由此引入协方差矩阵，希望通过协方差矩阵来进一步规范数据（但引入协方差矩阵同样会面临新的问题比如计算量过大，本身NN的数据维度就很高，与之对应的协方差矩阵的又会是维度的平方大小），从而得到generalization的效果。个人觉得这其实是一个trade-off，即网络得到的数据var越低，那么网络的泛化能力就会提升，但是网络的业务能力也会随之下降。
 
-#### 2. Learning to Adapt Structured Output Space for Semantic Segmentation [pdf](https://arxiv.org/abs/1802.10349)
+#### 2. Learning to Adapt Structured Output Space for Semantic Segmentation(2018CVPR) [pdf](https://arxiv.org/abs/1802.10349)
 + **Assumption:** 文章的假设是，在语义分割的问题上，虽然不同数据集的图片会存在domain shift，比如真实图片和虚拟图片的差距，但语义分割的结果往往会具有相同性，例如排布，形状等。（论文原话：For instance, even if images from two domains are very different in appearance, their segmentation outputs share a significant amount of similarities, e.g., spatial layout and local context）
 + **Method：** 文章主要提出了因为语义分割结果具有相似性，所以想要在output space上面构建一个相似性损失函数，但是如果直接用一些类似于SSIM的指标来构建损失函数，又无法表达这个复杂的相似性，所以很自然的借鉴了GAN的思想使用了一个dsicriminator，即利用网络来判断两个语义分割的结果是否属于同一个domain。
 ![](/img/literature-review/adaseg.png)
@@ -36,7 +36,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 ![](/img/literature-review/adaseg-2.png)
 
 
-#### 3. Conditional Generative Adversarial Network for Structured Domain Adaptation [pdf](http://openaccess.thecvf.com/content_cvpr_2018/papers/Hong_Conditional_Generative_Adversarial_CVPR_2018_paper.pdf)
+#### 3. Conditional Generative Adversarial Network for Structured Domain Adaptation(2018CVPR) [pdf](http://openaccess.thecvf.com/content_cvpr_2018/papers/Hong_Conditional_Generative_Adversarial_CVPR_2018_paper.pdf)
 
 
 
