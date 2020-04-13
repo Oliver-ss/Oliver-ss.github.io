@@ -20,7 +20,8 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 # Reading List
 
 ### 1.Revisiting Batch Normalization For Practical Domain Adaptation [pdf](https://arxiv.org/abs/1603.04779)
-+ **Method：**这篇文章可以说是提升效果最明显最简单的domain adaptation的文章了，并且不受task的限制，只要是网络中存在BN，即可使用这个方法在target domain上重新计算新的BN层的mean和var从而达到domain adaptation的效果。
+##### Method
+这篇文章可以说是提升效果最明显最简单的domain adaptation的文章了，并且不受task的限制，只要是网络中存在BN，即可使用这个方法在target domain上重新计算新的BN层的mean和var从而达到domain adaptation的效果。
 
 当然这个文章能取得这么好的效果主要靠的是BN层的对于层间数据规范化的能力，因为BN会对层间数据做一个channel-wise的归一化，然后再通过可学习的缩放和平移系数，使得每个层得到的输入都尽可能的服从相同的分布（假设都是高斯分布），这从一定程度上减小了对于数据集的依赖，也就减少了domain shift对网络的影响。但这里只用到了均值，标准差这两个统计数据，即使两组数据同均值，同标准差，他们并不一定同分布，所以有一些方法也会由此引入协方差矩阵，希望通过协方差矩阵来进一步规范数据（但引入协方差矩阵同样会面临新的问题比如计算量过大，本身NN的数据维度就很高，与之对应的协方差矩阵的又会是维度的平方大小），从而得到generalization的效果。个人觉得这其实是一个trade-off，即网络得到的数据var越低，那么网络的泛化能力就会提升，但是网络的业务能力也会随之下降。
 
@@ -40,7 +41,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 
 ### 3. Conditional Generative Adversarial Network for Structured Domain Adaptation(2018CVPR) [pdf](http://openaccess.thecvf.com/content_cvpr_2018/papers/Hong_Conditional_Generative_Adversarial_CVPR_2018_paper.pdf)
 
-### 4. FCNs in the Wild: Pixel-level Adversarial and Constraint-based Adaptation(2016CVPR) [pdf](https://arxiv.org/pdf/1612.02649.pdf)
+### 4. FCNs in the Wild: Pixel-level Adversarial and Constraint-based Adaptation(2016arXiv) [pdf](https://arxiv.org/pdf/1612.02649.pdf)
 这应该是第一篇做pixel-level的doamin adaptation的文章（有一说一这个文章写的是真的烂，前言不搭后语的，提出的第二个loss也没有公式，写的乱七八糟，github上面也没有实现的代码，醉了）
 ##### Assumption
 文章把存在的domain shift分成了两类global和category shifts，一个global是由于数据集整体的变化造成的特征空间的边缘概率的不同，这个domain shift在两个比较不同的数据集中比较明显，比如生成数据集和真实数据集；第二个category是每一个种类内部的参数变化造成的doamin shift，例如不同数据集同一类的东西的大小，外观，数量都会存在不同。  
