@@ -20,7 +20,8 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 # Reading List
 
 ### 1.Revisiting Batch Normalization For Practical Domain Adaptation [pdf](https://arxiv.org/abs/1603.04779)
-+ **Method：**这篇文章可以说是提升效果最明显最简单的domain adaptation的文章了，并且不受task的限制，只要是网络中存在BN，即可使用这个方法在target domain上重新计算新的BN层的mean和var从而达到domain adaptation的效果。
+##### Method
+这篇文章可以说是提升效果最明显最简单的domain adaptation的文章了，并且不受task的限制，只要是网络中存在BN，即可使用这个方法在target domain上重新计算新的BN层的mean和var从而达到domain adaptation的效果。
 
 当然这个文章能取得这么好的效果主要靠的是BN层的对于层间数据规范化的能力，因为BN会对层间数据做一个channel-wise的归一化，然后再通过可学习的缩放和平移系数，使得每个层得到的输入都尽可能的服从相同的分布（假设都是高斯分布），这从一定程度上减小了对于数据集的依赖，也就减少了domain shift对网络的影响。但这里只用到了均值，标准差这两个统计数据，即使两组数据同均值，同标准差，他们并不一定同分布，所以有一些方法也会由此引入协方差矩阵，希望通过协方差矩阵来进一步规范数据（但引入协方差矩阵同样会面临新的问题比如计算量过大，本身NN的数据维度就很高，与之对应的协方差矩阵的又会是维度的平方大小），从而得到generalization的效果。个人觉得这其实是一个trade-off，即网络得到的数据var越低，那么网络的泛化能力就会提升，但是网络的业务能力也会随之下降。
 
@@ -40,7 +41,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 
 ### 3. Conditional Generative Adversarial Network for Structured Domain Adaptation(2018CVPR) [pdf](http://openaccess.thecvf.com/content_cvpr_2018/papers/Hong_Conditional_Generative_Adversarial_CVPR_2018_paper.pdf)
 
-### 4. FCNs in the Wild: Pixel-level Adversarial and Constraint-based Adaptation(2016CVPR) [pdf](https://arxiv.org/pdf/1612.02649.pdf)
+### 4. FCNs in the Wild: Pixel-level Adversarial and Constraint-based Adaptation(2016arXiv) [pdf](https://arxiv.org/pdf/1612.02649.pdf)
 这应该是第一篇做pixel-level的doamin adaptation的文章（有一说一这个文章写的是真的烂，前言不搭后语的，提出的第二个loss也没有公式，写的乱七八糟，github上面也没有实现的代码，醉了）
 ##### Assumption
 文章把存在的domain shift分成了两类global和category shifts，一个global是由于数据集整体的变化造成的特征空间的边缘概率的不同，这个domain shift在两个比较不同的数据集中比较明显，比如生成数据集和真实数据集；第二个category是每一个种类内部的参数变化造成的doamin shift，例如不同数据集同一类的东西的大小，外观，数量都会存在不同。  
@@ -59,4 +60,25 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 ##### Results
 （这个文章看的过于影响心情，随便贴两个结果了）
 ![](/img/literature-review/fcns-1.png)
+
+### 5.Curriculum Domain Adaptation for Semantic Segmentation of Urban Scenes(2017ICCV)[pdf](https://arxiv.org/abs/1707.09465)
+这是找到的时间顺序上第二篇做DA for Segmentation的文章，文章的虽然有点老，但是其中的观点还是有点意思，相比于FCNS，文章不同或者说贡献主要是手动设计了两个loss function来增强model的generalize能力。
+##### Assumption
+文章的主要假设是觉得FCNS的方法是寻找一个common feature space，所以默认了不同的domains拥有同样的decision functions，这个假设存在问题，作者认为适应到target domain上，需要使得模型更加适应target domain的一些特性，基于这个假设，作者构建了两个target domain property的loss。
+##### Method
+作者主要提出了两个target domain properties，一个是Global label distributions of images，另一个是Local label distributions of landmark superpixels。所以整个模型的思路很简单，就是一个segmentation的cross entropy loss加上两个properties的各自的loss来联合训练模型。
+![](/img/literature-review/cda.png)
+下面简单讲一个两个target domain properties：
++ Global label distributions of images
+这个其实就是在FCNS那个size constraint loss上面的延伸，把每个图片中各个类别的占比用一个分布来表示，比方说，输入一张车载图片，其中天空占0.6，马路占0.3，行人占0.1，因此构成了一个[0.6,0.3,0.1]的vector，把所有的图片都统计一遍，就有了一个distribution，所以说target domain的预测结果，要符合target doamin的这个分布，所以问题来了，我们其实没有target domain的标注，所以没有label就只能自己造pseudo label，所以作者这里就用一个backbone的Inception-Resnet V2的model来提出特征，然后用传统ML算法logistic regression，Nearest Neighbour等在source doamin上面训练，然后在target doamin上直接回归单张图片的各类占比分布（这里就是假设说这个任务相对比较简单，所以受domain shift的影响比较小，但我这里这里可以做个实验验证一下，虽然intuitively来说是正确的）
++ Local label distributions of landmark superpixels
+第一个global label distribution缺少了对于位置信息的监督，所以第二个这个local label引入了位置信息，主要就是首先把图片分割成100个superpixels，然后通过在别的语义分割数据集上预训练的模型FCN来对于每一个superpixel块提取特征，然后再次根据source domain的label训练一个SVM用于预测每一个superpixel块的分布
++ Loss
+无论是global distribution还是local distribution，作者都通过生成的pseudo label和实际segmentation model生成的的结果算出来的分布，构建了一个entory+KL divergence的loss：
+![](/img/literature-review/cda-loss1.png)
+
+##### Results
+主要在和FCNS进行对比，显示结果远超了FCNS，达到了当时的SOTA，并且说明了和FCNS使用了同样的model，但是baseline就远超FCNS（这个也make sense毕竟FCNS这个文章无比的随意）
+![](/img/literature-review/cda-res.png)
+通过这个表可以发现引入了位置信息的SP loss涨点比较明显。个人猜想整体上的distribution来做loss，对于梯度更新来说比较模糊，所以可能效果不明显。
 
