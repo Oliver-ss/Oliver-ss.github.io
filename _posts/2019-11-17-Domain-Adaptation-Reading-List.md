@@ -19,7 +19,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 
 # Reading List
 
-### 1.Revisiting Batch Normalization For Practical Domain Adaptation [pdf](https://arxiv.org/abs/1603.04779)
+### 1.Revisiting Batch Normalization For Practical Domain Adaptation（2016arXiv） [pdf](https://arxiv.org/abs/1603.04779)
 ##### Method
 这篇文章可以说是提升效果最明显最简单的domain adaptation的文章了，并且不受task的限制，只要是网络中存在BN，即可使用这个方法在target domain上重新计算新的BN层的mean和var从而达到domain adaptation的效果。
 
