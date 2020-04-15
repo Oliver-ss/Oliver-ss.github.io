@@ -40,6 +40,20 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 
 
 ### 3. Conditional Generative Adversarial Network for Structured Domain Adaptation(2018CVPR) [pdf](http://openaccess.thecvf.com/content_cvpr_2018/papers/Hong_Conditional_Generative_Adversarial_CVPR_2018_paper.pdf)
+##### Assumption
+这个文章的主要的观点是说如果一定要给两个不同的domain找一个common feature space太生硬了，所以需要给这个feature space一点弹性，所以提出了使用一个generator来学习两个不同domain的feature space的不同。
+##### Method
+文章的采用的结构如下
+![](/img/literature-review/cga.png)
+主要就是给source domain生成的feature map加了一个generator生成的residual feature map，两两相加之后送给discriminator和target domain的feature map做一个adversarial loss，来使得两个domain的feature map分布相近。然后这里提到之所以generator的输入是一个noise map叠加一个low-level feature map是因为noise map用来提供随机性，然后low-level feature map是用来提供一些底层的细节信息例如边界条纹等（一般来说CNN的前面几层都是在寻找一些边界信息），因为两两组合，就能生成较为合理的residual map。
+
+文章还专门提到，在实际训练这个模型的时候，我们把模型分为encoder，decoder，discriminator，generator四部分，那么一开始先用分割问题的cross entropy loss和实际上训练discriminator的loss来更新decoder和discriminator，然后固定住他们，再用adversarial loss来更新encoder和generator。并且考虑到GAN的不稳定性，所以实际上训练的时候，对于source domain的原始feature map和新生成的feature map都做segmentation loss。
+##### Results
+![](/img/literature-review/cga-1.png)
+![](/img/literature-review/cga-2.png)
+可以看到这个方法涨点十分明显，可以说几乎在原来结果的基础上涨了50%的mIoU，最后的adaptation之后的模型在cityscapes上面的表现都超过了40%，但这里没有提供如果我们直接用FCN-8S这个模型在cityspaces上面直接用label训练的结果，也就是如果有label，那这个模型的极限能力在哪里，所以我查了一下cityspaces的benchmark，看到FCN-8s的表现是67.1%mean IoU，所以涨点到40看起来还是比较合理的，而且FCN-8s这个模型也没有BN层，所以也不存在是否使用了AdaBN辅助的问题。下图是FCN-8s模型在cityspaces上面的表现
+![](/img/literature-review/fcn-8s-baseline.png)
+
 
 ### 4. FCNs in the Wild: Pixel-level Adversarial and Constraint-based Adaptation(2016arXiv) [pdf](https://arxiv.org/pdf/1612.02649.pdf)
 这应该是第一篇做pixel-level的doamin adaptation的文章（有一说一这个文章写的是真的烂，前言不搭后语的，提出的第二个loss也没有公式，写的乱七八糟，github上面也没有实现的代码，醉了）
