@@ -97,3 +97,23 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 ![](/img/literature-review/cda-2.png)
 通过这个表可以发现引入了位置信息的SP loss涨点比较明显。个人猜想整体上的distribution来做loss，对于梯度更新来说比较模糊，所以可能效果不明显。
 
+### 6.ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation（2019CVPR）[pdf](https://arxiv.org/abs/1811.12833)
+这个文章主要是在Learning to Adapt Structured Output Space for Semantic Segmentation这个文章的基础上进一步拓展了，加入了entropy map的概念以及加了个unsupervised loss，然后涨了一些点，成为了SOTA。
+##### Assumption
+文章的主要的假设和上面那篇文章一样，也就是不同domain的output还是存在一定的相似性的，所以可以用一个discriminator来拉进他们的距离。同时文章创新的地方就是引入了entropy的概念吧，segmentation map其实是对每一个像素点都做一个分类，softmax之后会得到了一个看起来很像概率的东西（虽然他们本质上并不是），如果我们认为这个就是概率，那么就可以通过一个公式（h,w代表map的高和宽，c代表有多少类）
+![](/img/literature-review/advent-1.png)
+
+所以如果结果十分确定，举个极端例子，在某一个点上面，得到的结果是[1,0,0,0,0]，意思是该点有100%的可能性是属于第一类，所以entropy算出来就是0，其实这个entropy就是看模型对于预测的结果是否自信。文章里面贴了个图，可以看到这个entropy map和segmentation map的区别就是仿佛entropy map在勾勒一个边界，也就是说，模型其实在边界处是没那么自信的，不知道边界到底该属于哪一类，所以entropy就会高一点。
+![](/img/literature-review/advent-2.png)
+
+##### Method
+主要方法就是把模型输出的结果从一个segmentation map先转换成一个entropy map，然后用一个discriminator来对不同domain的entropy map做一个adversarial loss，然后辅助加上一个entropy minimization loss，这个loss的公式如下
+![](/img/literature-review/advent-3.png)
+这个loss作者说还和self-training的概念有点相近，其实本质上在利用模型生成的pseudo label来进一步对模型进行训练，只不过相比于设置一些threshold来选取一些high-confidence pixel作为label，这个entropy的方法就类似于一个soft label。感觉就是稍微用了几句话简单了证明了一下他的观点可能是有理论依据的？反正听起来还是有点道理的。
+具体的模型结构就是如下
+![](/img/literature-review/advent-4.png)
+这里需要提一下的是，这个adversarial loss和cyclegan的不同，这里这个loss只是使得target domain的结果和source domain的接近，所以只针对target domain而不会去改变source domain的分布。
+文章中没有提到具体的训练过程，只提到这个adversarial loss和entropy minimization loss的权重都是0.001，反正就是这种无监督的loss如果权重过大就很容易把训练带崩，所以我猜测这个模型也是用了在source domain上面训练好的模型来初始化。
+##### Results
+这个文章主要是在Adapt Seg上面进行了延伸，所以也主要只和Adapt Seg进行了对比，可以看到基本上是涨点了吧，虽然可能没有那么明显。
+![](/img/literature-review/advent-5.png)
