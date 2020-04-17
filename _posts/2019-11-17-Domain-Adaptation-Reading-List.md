@@ -118,7 +118,7 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 这个文章主要是在Adapt Seg上面进行了延伸，所以也主要只和Adapt Seg进行了对比，可以看到基本上是涨点了吧，虽然可能没有那么明显。
 ![](/img/literature-review/advent-5.png)
 
-### DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation(2018ECCV)[pdf](http://openaccess.thecvf.com/content_ECCV_2018/papers/Zuxuan_Wu_DCAN_Dual_Channel-wise_ECCV_2018_paper.pdf)
+### 7.DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation(2018ECCV)[pdf](http://openaccess.thecvf.com/content_ECCV_2018/papers/Zuxuan_Wu_DCAN_Dual_Channel-wise_ECCV_2018_paper.pdf)
 这个文章没有细看，只是粗略的看了一个大概，主要就是手动用了改进版的instance normalization来进行pixel-level和feature-level的adaptation
 ##### Method
 + Channel-wise Feature Alignment
