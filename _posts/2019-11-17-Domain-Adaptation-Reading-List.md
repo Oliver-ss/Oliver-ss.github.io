@@ -140,3 +140,17 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 这里首先是ADDA（用了一个discriminator来align feature space）比较，说明Channel-wise Feature Alignment效果更好，然后分别演示在哪一层后面用这个Channel-wise Feature Alignment效果最好，发现是conv3后面，作者的分析是conv3后面channel(256)数和feature map(1/8)大小都比较合适，然后conv6，7效果最差因为这两层太后面了所以downsample过多feature map太小，所以说明我们在alignment的时候需要保留具体的空间信息。同时作者也尝试了MMD和CORAL的方法都是结果都太差了不仅没有涨点还掉点了所以就没把结果贴出来，这其实也和组里实验一致。
 
 总之这篇文章还是写的蛮好的值得一读，发现ECCV的文章感觉都比CVPR的看上去写的好一点，不知道是不是我的错觉。。。
+
+### 8.CYCADA: CYCLE-CONSISTENT ADVERSARIAL DOMAIN ADAPTATION(2018ICML)[pdf](https://arxiv.org/abs/1711.03213)
+这是FCNS文章作者接着的第二篇同领域文章，相比于上篇，写的真的好太多，可能是因为这个投稿了而上一篇只是arXiv吧，这篇文章基本上就是根据CycleGAN把GAN在domain adaptation上面用到了极致，没有细看，所以大概讲讲文章的方法吧。
+##### Method
+文章的思路不难，先贴个模型图
+![](/img/literature-review/cycada.png)
+从图片可以看出，首先有一个image translation的网络（图中两个G），这就是一个cyclegan的网络，同时在feature space上面也加了个GAN loss，对于生成的Source Image Stylized as Target和原始的source image还做了一个sementic consistency loss，别的loss不多说了就是GAN那套，简单讲讲这个consistency loss，先贴公式
+![](/img/literature-review/cycada-1.png)
+简单解释一下就是先拿一个在source domain上面训练好的模型f，然后直接拿source和target domain的原图送进去得到一个segmentation map，argmax之后把这个结果作为我们的gt，然后再拿G分别生成的新图，送给f然后拿结果和我们刚刚生成的gt来做cross entropy loss
+这个模型还是相对比较复杂的，光是loss都写了一大串
+![](/img/literature-review/cycada-2.png)
+##### Results
+随便贴个结果，反正和他原来的方法比是涨点了
+![](/img/literature-review/cycada-3.png)
