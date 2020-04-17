@@ -117,3 +117,26 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 ##### Results
 这个文章主要是在Adapt Seg上面进行了延伸，所以也主要只和Adapt Seg进行了对比，可以看到基本上是涨点了吧，虽然可能没有那么明显。
 ![](/img/literature-review/advent-5.png)
+
+### DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation(2018ECCV)[pdf](http://openaccess.thecvf.com/content_ECCV_2018/papers/Zuxuan_Wu_DCAN_Dual_Channel-wise_ECCV_2018_paper.pdf)
+这个文章没有细看，只是粗略的看了一个大概，主要就是手动用了改进版的instance normalization来进行pixel-level和feature-level的adaptation
+##### Method
++ Channel-wise Feature Alignment
+这个文章的思路主要来源于style transfer，提到在style transfer领域，会有一个original image和一个reference image，然后我们就需要把original image的风格转移的尽量和reference相近，所以在这个领域大家都是用的instance normalization而不是batch normalization，然后也有一些文章提到其实图片的mean和var包含了大量色彩和纹理的信息，所以这两个参数其实对于图片的风格很重要（我当时也看到过这个，看完觉得make sense然后就没有然后了，这个大哥却由此发了个文章）。本文就是用Adaptative Instance Normalization来做一个Channel-wise Feature Alignment，具体细节如下
+![](/img/literature-review/dcan-1.png)
+可以看到其实就是对于reference image算一个mean和var，然后把original image归一化之后放到reference image的参数里面，有种每层强行统一分布的感觉
++ Model
+![](/img/literature-review/dcan.png)
+模型的结构就是这样，先是在target domain里面选一个reference image，然后先经过一个叫Image Generator的网络来进行风格迁移，这里风格迁移还有一个loss function就是用来比较迁移过后的图片和原来的图片还像不像，不要丢失过多的信息，这loss function如下，这里不细讲了不是重点，详情可见原文
+![](/img/literature-review/dcan-2.png)
+得到风格迁移过后的图片就送进segmentation network，这里面又对segmentation network再次做了一个Channel-wise Feature Alignment然后就得到结果并且进行正常的segmentation loss
+##### Results
+结果如下，这个文章还给了Oracle的结果也是很令人感动
+![](/img/literature-review/dcan-4.png)
+文章里实验还是做的比较详尽的，还使用别的image synthesis methods来对比试验，说明Channel-wise Feature Alignment真的会有帮助
+![](/img/literature-review/dcan-3.png)
+同时也用了别的segmentation network上面feature alignment的方法来和Channel-wise Feature Alignment对比，说明Channel-wise Feature Alignment效果最好
+![](/img/literature-review/dcan-5.png)
+这里首先是ADDA（用了一个discriminator来align feature space）比较，说明Channel-wise Feature Alignment效果更好，然后分别演示在哪一层后面用这个Channel-wise Feature Alignment效果最好，发现是conv3后面，作者的分析是conv3后面channel(256)数和feature map(1/8)大小都比较合适，然后conv6，7效果最差因为这两层太后面了所以downsample过多feature map太小，所以说明我们在alignment的时候需要保留具体的空间信息。同时作者也尝试了MMD和CORAL的方法都是结果都太差了不仅没有涨点还掉点了所以就没把结果贴出来，这其实也和组里实验一致。
+
+总之这篇文章还是写的蛮好的值得一读，发现ECCV的文章感觉都比CVPR的看上去写的好一点，不知道是不是我的错觉。。。
