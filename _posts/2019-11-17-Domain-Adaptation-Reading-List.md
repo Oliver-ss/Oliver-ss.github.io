@@ -152,5 +152,18 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 这个模型还是相对比较复杂的，光是loss都写了一大串
 ![](/img/literature-review/cycada-2.png)
 ##### Results
-随便贴个结果，反正和他原来的方法比是涨点了
+随便贴个结果，反正和他原来的方法比是涨点了，用的模型就是FCN8s-VGG16
 ![](/img/literature-review/cycada-3.png)
+
+### 9.CrDoCo: Pixel-level Domain Transfer with Cross-Domain Consistency(2019CVPR)[pdf](http://openaccess.thecvf.com/content_CVPR_2019/papers/Chen_CrDoCo_Pixel-Level_Domain_Transfer_With_Cross-Domain_Consistency_CVPR_2019_paper.pdf)
+看这个名字，就知道和CYCADA上一篇差不多，确实也是如此，这个文章就是在上一篇的基础上进行了一些修修补补的工作，且针对consistency loss进行了五毛钱创新
+##### Method
+直接上模型图
+![](/img/literature-review/cydoco.png)
+可以看到和cycada的结构基本上一样，唯一的不用就是大家的consistency loss不同，这里作者直接对比target domain image和生成的target domain image的segmentation maps对了一个双向的KL-divergency的loss，意思是这两个segmentation maps应该是一样的，公式如下
+![](/img/literature-review/cydoco-2.png)
+（其实我觉得文章这个loss可能还写错了，按照这个式子，这个不是bi-KL而是一个bi-cross entropy）
+##### Results
+从表现上来看CrDoCo这个方法超过了CyCADA，而且涨点还是比较多的，虽然我觉得他们俩本质上没啥区别，可能是参数调的好吧
+![](/img/literature-review/cydoco-1.png)
+
