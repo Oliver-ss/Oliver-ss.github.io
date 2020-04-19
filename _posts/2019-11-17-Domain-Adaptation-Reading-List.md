@@ -217,3 +217,29 @@ output-level的adaptation主要的作用是两点：第一个是加入了depth e
 ![](/img/literature-review/dada-1.png)
 可以看到还是有一些涨点的，但是有个很奇怪的地方，就是全文一直在cue SPIGAN这个文章，仿佛是第一个把depth引入domain adaptation for segmentation的文章，作者一直说他们的方法超过了SPIGAN，但是从结果来看，他俩又不同台竞技，用的一个模型，却用的不同backbone，SPIGAN用的VGG16，但是本文用的resnet101。作者明明可以再跑个VGG16的结果，但是没有，盲猜并没有打败前人，所以干脆换个赛道。。。
 
+### 13.Domain Adaptation for Semantic Segmentation with Maximum Squares Loss(2019ICCV)[pdf](http://openaccess.thecvf.com/content_ICCV_2019/papers/Chen_Domain_Adaptation_for_Semantic_Segmentation_With_Maximum_Squares_Loss_ICCV_2019_paper.pdf)
+这个文章可以理解为就是AdaSeg，Advent的进阶，主要是针对Advent里面那个entropy minization loss在high confidence cases上面梯度较大的改进，提出了high confidence意味着就是easy case，所以在这种case上面gradient很大没有意义，所以需要尽量平均一下gradient
+##### Method
+文章是一个non-adversarial的结构，这个还比较少见，下面介绍一个文章的主要观点这个maximum square loss，
+先看entropy minimization loss和对应的在二分类问题上的gradient
+![](/img/literature-review/msl-1.png)
+![](/img/literature-review/msl-2.png)
+再看提出的maximum square loss和对应的在二分类问题上的gradient
+![](/img/literature-review/msl-3.png)
+![](/img/literature-review/msl-4.png)
+然后作者画了个随着这个confidence score的变化，graident mganitude的变化
+![](/img/literature-review/msl.png)
+可以看到entropy minimization的方法在high confidence case上面的梯度会呈指数上升，而maximum square loss就始终是一个线性的方法，相比较而言会好一点，因为对于那些本来confidence score就很高比如已经0.95的case来说，进一步把他们提升到1.0其实对于预测本身来说没啥收益，因为反正最后还要来个argmax，所以结果都是一样的，所以我们就希望网络不要老是在学这个没啥意义的工作
+当然文章除了这个maximum square loss以外，还有一些修修补补的小工作，比如说提出了一个Image-wise Class-balanced Weighting Factor，意思就是说对于target domain image来说每一类的占比不是一样的，那些多的类就很容易学的比较好因为loss会比较大，所以我们要处理一下这个类间的不平衡问题，如果有label的话，那这个问题就很naive，直接用每一类的占比取个倒数乘到前面就好，甚至可以参考focal loss，但是问题是target domain我们没有label，所以有些文章就会用source domain的这个统计参数，但是source domain和target domain在这个统计参数上其实并不是一定一样的，所以文章就提到还是要用target domain的统计参数，就是使用实际模型对于target domain的预测图来算这个统计参数，这又有了新问题，就是模型的预测结果并不一定准确，所以作者就弄了个缩放系数，当成一个超参来调整，具体公式如下
+![](/img/literature-review/msl-5.png)
+![](/img/literature-review/msl-6.png)
+其中的这个alpha就是超参
+最后一点就是作者除了最终出一个final segmentation map以外，还在low-level feature也预测了一个map，然后对于这个map生成了一个pseudo label，用的方法就是对final segmentation map和low-level segmentation map同时拉一个阈值寻找那些一定对的点
+![](/img/literature-review/msl-7.png)
+大家有兴趣可以自行看看原文
+##### Results
+可以看到文章其实主要在和Advent来比，然后还是有一些涨点的吧，虽然并不是很明显，但文章主要是一个non-adversarial的方法
+![](/img/literature-review/msl-res1.png)
+![](/img/literature-review/msl-res2.png)
+
+
