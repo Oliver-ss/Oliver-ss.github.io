@@ -179,3 +179,28 @@ Domain Adaptation在分类问题上现在已经有了不少的paper，详情可�
 结果也不多说了，反正涨点明显，毕竟2018年的时候sota表现还是比较差的，所以轻松涨点
 ![](/img/literature-review/lsd-3.png)
 
+### 11.Learning Semantic Segmentation from Synthetic Data: A Geometrically Guided Input-Output Adaptation Approach(2019CVPR)[pdf](https://arxiv.org/abs/1812.05040)
+##### Assumption
+文章的想法还是蛮简单的，就是提到了depth prediction和sementic segmentation是相关的任务，很多研究joint learning的paper都会把他们组合在一起，所以作者认为如果能利用好这两个任务的相关性，能够更好的来帮助domain adaptation，直观上的理解也确实，你给模型的信息信息越多，那模型学出来的东西就会更加的本质一点
+##### Method
+先直接来看模型图
+![](/img/literature-review/lss.png)
+可以看到模型的结构上还是比较传统的，就是有一个image translation network(G)用来把source domain转换到target，为了训练这个G，仿照GAN用到了一个discriminator，然后转换过后的图片和target domain的图片都会被送到task network里面然后生成一个segmentation map和一个depth map，然后这两个map会被concatenate到一起给discrimintaor生成一个adversarial loss
+这里的image translation network是整个大模型的一部分，是一个end-to-end的网络，generator一个是否保留住了原图的信息主要是靠task network的segmentation和depth estimation的loss
+文章提到他们的方法主要是在input-level和output-level上面做adaptation，然后简单的解释了一下：
++ Input-level
+Input-level的这个adaptation主要是为了减少视觉上的domain shift，加入depth的原因是因为depth能一定程度上减小几何信息的丢失并且depth和segmentation又很相关，这个generator的结构很简单，和cyclegan一样，我估计作者就是粗暴的把原图，depth map，segmentation map三个concatenate到了一起输给网络
++ Output-level
+output-level的adaptation主要的作用是两点：第一个是加入了depth estimation的任务能够使得网络对于domain shift更加的robust因为这个两个task共用一个encoder但是不同的decoder；第二点是这个两个任务之间的相关性可以看做是两个domain alignment之间重要线索。（其实这两个原因我觉得其实是一回事。。。）Task model的结构就是deeplab v2，backbone就是VGG16
+##### Results
+反正文章能发表，肯定是涨点了，但是这里我觉得有点问题就是用的模型和别的文章并不完全相同，虽然都是同一个backbone VGG16，但是deeplab v2和fcn-8s模型能力上还是存在区别的
+![](/img/literature-review/lss-1.png)
+文章还做了一些ablation study我觉得还是比较有意思的，贴出来看看
++ Input-level
+![](/img/literature-review/lss-2.png)
+从这个表看出来，比起把image translation这个过程单独拿出去训练，文中采用端对段的这种网络，利用task loss来训练这个generator看起来效果更好（对比cg和gd），猜测可能是如果只是由source生成target，很难构建这个consistency loss，因为没有一个cycle的过程
++ Output-level
+本来我还想吐槽这个output的discriminator居然就是粗暴的把segmentation map(c channels)和depth map(1 channel)组合成一个c+1 channel的map扔进去太粗暴了不应该分开来做两个loss么，结果发现人家做了实验对比，组合在一起效果更好虽然我也无法理解为什么会这样。。。我觉得难道是因为分开的话这两个adversarial loss还有权重的区别所以没调好？
+![](/img/literature-review/lss-3.png)
+
+
