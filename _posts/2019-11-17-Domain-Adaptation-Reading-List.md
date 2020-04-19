@@ -203,4 +203,17 @@ output-level的adaptation主要的作用是两点：第一个是加入了depth e
 本来我还想吐槽这个output的discriminator居然就是粗暴的把segmentation map(c channels)和depth map(1 channel)组合成一个c+1 channel的map扔进去太粗暴了不应该分开来做两个loss么，结果发现人家做了实验对比，组合在一起效果更好虽然我也无法理解为什么会这样。。。我觉得难道是因为分开的话这两个adversarial loss还有权重的区别所以没调好？
 ![](/img/literature-review/lss-3.png)
 
+### 12.DADA: Depth-aware Domain Adaptation in Semantic Segmentation(2019ICCV)[pdf](https://arxiv.org/abs/1904.01886)
+这篇文章同样引入了深度信息来帮助进行domain adaptation，方法和上一个略有不同，主要是在feature-level上面进行domain adaptation
+##### Assumption
+文章的假设就两点：第一引入了privileged information的概念，就是说网络得到的信息越多，训练的就越好就像人的接受新事物的时候都会有老师帮助解释这样子；第二点是说因为是针对的是自动驾驶的数据集，所以那些离相机更近的物体应该更加重视，毕竟离得比较远的即使错了对于自动驾驶来说也问题不大
+##### Method
+直接上模型图
+![](/img/literature-review/dada.png)
+大概解释一下，就是给模型直接输入一个图片,然后这里有一个backbone的CNN来提取特征，提取完特征之后，会有一个额外的encoder（3层conv）进一步对这个提取出来的特征做处理，看了看代码主要是降低维度，backbone的结果都是2048channel的，这个拿去预测depth维度太高了，所以用这个encoder把维度降到128，然后进行average pooling的操作就是对每个pixel上面的所有通道求个均值做的depth的预测结果。同时这个128维的feature还有一个decoder（1层conv），其实就是把维度还原成2048，然后和原来的feature做一个element-wise product得到融合的feature，再拿这个feature拿去做segmentation预测。
+想法还是很清晰的，就是想把用于预测depth学到的特征融合进来，提高feature space的鲁棒性。当然模型最后也在output space上面做了一个adversaraial loss，利用对source image和target image预测的两个深度图和分割图，做了一个DADA fusion，解释一个就是和advent文章一样，先把分割图转转换成1通道的entropy map，然后再和深度图直接做element-wsie product，这里提一下因为深度预测的任务大家一直都是预测的深度的倒数，因为有一些物体类似于天空是无穷远不用倒数不好表达，所以这里和深度的倒数做乘积，刚好作者说能够使得近处的物体数值变大，表示更加重视近处物体，符合第二个假设
+##### Results
+只做了SYNTHIA-Cityspaces一组实验，结果如下
+![](/img/literature-review/dada-1.png)
+可以看到还是有一些涨点的，但是有个很奇怪的地方，就是全文一直在cue SPIGAN这个文章，仿佛是第一个把depth引入domain adaptation for segmentation的文章，作者一直说他们的方法超过了SPIGAN，但是从结果来看，他俩又不同台竞技，用的一个模型，却用的不同backbone，SPIGAN用的VGG16，但是本文用的resnet101。作者明明可以再跑个VGG16的结果，但是没有，盲猜并没有打败前人，所以干脆换个赛道。。。
 
