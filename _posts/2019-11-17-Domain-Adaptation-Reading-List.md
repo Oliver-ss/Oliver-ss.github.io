@@ -242,4 +242,5 @@ output-level的adaptation主要的作用是两点：第一个是加入了depth e
 ![](/img/literature-review/msl-res1.png)
 ![](/img/literature-review/msl-res2.png)
 
+### 14.SSF-DAN: Separated Semantic Feature based Domain Adaptation Network for Semantic Segmentation(2019ICCV)[pdf](http://openaccess.thecvf.com/content_ICCV_2019/papers/Du_SSF-DAN_Separated_Semantic_Feature_Based_Domain_Adaptation_Network_for_Semantic_ICCV_2019_paper.pdf)
 
