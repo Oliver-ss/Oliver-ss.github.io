@@ -243,4 +243,20 @@ output-level的adaptation主要的作用是两点：第一个是加入了depth e
 ![](/img/literature-review/msl-res2.png)
 
 ### 14.SSF-DAN: Separated Semantic Feature based Domain Adaptation Network for Semantic Segmentation(2019ICCV)[pdf](http://openaccess.thecvf.com/content_ICCV_2019/papers/Du_SSF-DAN_Separated_Semantic_Feature_Based_Domain_Adaptation_Network_for_Semantic_ICCV_2019_paper.pdf)
+这个文章的idea还是比较自然的，就是在feature-level上面进行domain adaptation，整体的把一个feature map送给discriminator来分辨，这样其实没有区别对待不同的class，所以就想到了要分开来每一个class弄一个discriminator来做对抗训练
+##### Method
+先上模型结构图
+![](/img/literature-review/ssfdan.png)
+简单的理一下这个模型的结构，前面的部分G可以理解为是一个feature extracter，然后sigma就是一个decoder，decoder的结果就是segmentation map，用来做一个cross entropy loss。G提出来的feature和segmentation map相乘，得到每一类各自的feature map（source用gt，target用prediction），然后每一个有各自的一个discriminator（SS-D部分），最终把所有discriminator的结果全部相加，得到最终的对于feature map的pixel-wise的判断结果，判断每个点的feature是属于source还是target，以此来做一个对抗训练。
+文章还有一些细节，这些细节主要是用于处理target domain没有gt，所以去分割feaeture的时候会存在使用的prediction结果存在错误的问题，所以作者提出了一些修修补补的东西来尽量减小这些错误。
++ Progressive Confidence Strategy
+这里就是说我们对于target domain image的pseudo label不能全信，所以需要找个方法滤掉一部分不靠谱的。作者的方法是：因为在模型训练的初期，模型的预测能力很差，所以生成的pseudo label也大多不靠谱，所以我们保留的pseudo label因为随着训练的进程，逐渐变多。因此作者设置了一个超参代表保留的点的数量的比例，即对生成的label里面每个点的confidence从高到低排列，然后只保留最高的部分点的结果
++ Class-wise Adversarial Loss Reweighting
+这个主要用于处理类间不平衡的问题，想要加大那些不容易得到high confidence的类的loss权重，用的方法就是算了个每一类实际预测的时候的平均分数的倒数开根号乘到loss里面，举个例子比方说一个二分类，有100个点被预测为0，平均的score是0.9，有100个点被预测为1，平均score是0.6，那么0类的权重就是sqrt(1/0.9)
+![](/img/literature-review/ssfdan-1.png)
+##### Results
+结果上就是涨点了
+![](/img/literature-review/ssfdan-2.png)
+同模型和Adaseg比较，可以感觉到在那些比较难的类上面是有一定的涨点的虽然不是很明显，例如sign和pole。很奇怪的是，在car这个大类上面，反而涨点最明显，也是玄学了，意思是分开来做adaptation对car的帮助最大。
+
 
